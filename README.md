@@ -138,6 +138,47 @@ for w in (640, 1200):
 
 **Matières** : les cinq entrées vivent dans l'objet `MATIERES` de `assets/app.js` et les boutons correspondants dans `index.html`.
 
+## Photos
+
+Les 25 visuels viennent de l'atelier. **Ce sont des captures d'écran d'iPhone**, pas des
+exports photo : aucune donnée EXIF, et deux largeurs caractéristiques (828 px et 1206 px,
+soit les résolutions d'écran d'un iPhone XR/11 et d'un iPhone 16 Pro). Résolution moyenne :
+**1,09 mégapixel**, quand une image 4K en compte 8,29. Il manque donc 87 % des pixels — aucun
+agrandissement ne peut les inventer.
+
+### Traitement appliqué
+
+Un traitement volontairement retenu, adaptatif : plus une photo a déjà une dynamique
+pleine, moins on intervient (10 des 25 photos avaient une vraie marge).
+
+1. Récupération de la moitié de la marge de dynamique seulement — jamais de sur-étirement.
+2. Micro-contraste en S de 5 à 10 %, selon la marge.
+3. Saturation de 0 à +4 %, selon la marge.
+4. Masque flou léger (rayon 1,0 ; 58 %, seuil 3).
+
+Les niveaux sont calculés sur la luminance et appliqués identiquement aux trois canaux :
+le contraste monte sans dérive de couleur, la chaleur du bois est préservée.
+
+Un premier essai plus appuyé (saturation +7 %, S à 14 %) faisait virer les photos de chêne
+à l'orange : effet « filtre », l'inverse d'un rendu professionnel. D'où la version douce.
+
+### Formats servis
+
+`<picture>` avec AVIF en premier et WebP en repli, en deux largeurs (640 et 1200 px).
+À qualité équivalente, l'AVIF est **22 à 24 % plus léger** que le WebP.
+Un visiteur moderne ne télécharge que l'AVIF.
+
+### Pour aller plus loin
+
+Le vrai palier ne se joue pas dans le code. Deux leviers, par ordre d'efficacité :
+
+1. **Récupérer les originaux.** Les photos existent presque certainement en 12 mégapixels
+   (4032 × 3024) dans la pellicule d'Alice. Ce serait 3 à 4 fois plus de détail réel,
+   gratuitement. Il faut les envoyer par AirDrop ou en « taille réelle » — surtout pas par
+   messagerie ni via une capture d'écran, qui recompressent.
+2. **Une série photo commissionnée.** Le rendu « photographe professionnel » tient à la
+   lumière, au cadrage et au rangement du décor, pas au nombre de pixels.
+
 ## Ce qui a été vérifié
 
 - **Rendu** : 375×667, 390×844, 768×1024, 1280×800, 1440×700, 1440×900. Aucun débordement horizontal.

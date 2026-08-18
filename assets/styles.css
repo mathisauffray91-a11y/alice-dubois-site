@@ -503,12 +503,13 @@ body.is-locked { overflow: hidden; }
   border-radius: var(--r-md);
   aspect-ratio: var(--ar, auto);
 }
-.media > img {
+.media picture { display: contents; }
+.media img {
   width: 100%; height: 100%; object-fit: cover;
   opacity: 0;
   transition: opacity .7s var(--ease-out);
 }
-.media > img.is-loaded { opacity: 1; }
+.media img.is-loaded { opacity: 1; }
 .media--fill { position: absolute; inset: 0; border-radius: 0; }
 
 
@@ -633,10 +634,8 @@ body.is-locked { overflow: hidden; }
   transition: clip-path 1.15s var(--ease-out);
   transition-delay: calc(var(--d, 0) * 80ms);
 }
-.js [data-reveal="media"] > img,
 .js [data-reveal="media"] img { transform: scale(1.05); }
 .js [data-reveal="media"].is-in { clip-path: inset(0 0 0 0); }
-.js [data-reveal="media"].is-in > img,
 .js [data-reveal="media"].is-in img {
   transform: none;
   transition: transform 1.4s var(--ease-out), opacity .7s var(--ease-out);
@@ -735,8 +734,8 @@ body.is-locked { overflow: hidden; }
   aspect-ratio: var(--ar, 4 / 5);
   margin-bottom: var(--sp-4);
 }
-.work__media > img { transition: transform .8s var(--ease-out), opacity .7s var(--ease-out); }
-.work__btn:hover .work__media > img.is-loaded { transform: scale(1.04); }
+.work__media img { transition: transform .8s var(--ease-out), opacity .7s var(--ease-out); }
+.work__btn:hover .work__media img.is-loaded { transform: scale(1.04); }
 
 .work__media::after {
   content: ""; position: absolute; inset: 0;

@@ -314,11 +314,17 @@
     }).join('');
 
     $('#viewer-gallery').innerHTML = p.images.map(function (im) {
+      var tailles = 'sizes="(min-width:48rem) 32rem, 92vw"';
+      function jeu(ext) {
+        return 'images/' + im[0] + '-640.' + ext + ' 640w, images/' + im[0] + '-1200.' + ext + ' 1200w';
+      }
       return '<span class="media" style="--ar:' + im[2] + '/' + im[3] + '">' +
-        '<img src="images/' + im[0] + '-640.webp" ' +
-        'srcset="images/' + im[0] + '-640.webp 640w, images/' + im[0] + '-1200.webp 1200w" ' +
-        'sizes="(min-width:48rem) 32rem, 92vw" alt="' + im[1] + '" ' +
-        'width="' + im[2] + '" height="' + im[3] + '" decoding="async"></span>';
+        '<picture>' +
+          '<source type="image/avif" srcset="' + jeu('avif') + '" ' + tailles + '>' +
+          '<source type="image/webp" srcset="' + jeu('webp') + '" ' + tailles + '>' +
+          '<img src="images/' + im[0] + '-640.webp" alt="' + im[1] + '" ' +
+          'width="' + im[2] + '" height="' + im[3] + '" decoding="async">' +
+        '</picture></span>';
     }).join('');
     $$('#viewer-gallery img').forEach(watchImage);
 
@@ -408,6 +414,13 @@
       matImg.classList.remove('is-loaded');
       matImg.width = m.w; matImg.height = m.h;
       matImg.alt = m.alt;
+      /* Les <source> priment sur le src : sans cette mise à jour, la photo
+         ne changerait jamais dans les navigateurs qui lisent l'AVIF. */
+      $$('source', matImg.parentElement).forEach(function (s) {
+        var ext = s.type === 'image/avif' ? 'avif' : 'webp';
+        s.srcset = 'images/' + m.img + '-640.' + ext + ' 640w, ' +
+                   'images/' + m.img + '-1200.' + ext + ' 1200w';
+      });
       matImg.src = 'images/' + m.img + '-1200.webp';
       matImg.dataset.watched = '';
       watchImage(matImg);
