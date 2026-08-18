@@ -119,7 +119,18 @@
     var revealer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        groupeDe(entry.target).forEach(function (el) { el.classList.add('is-in'); });
+        groupeDe(entry.target).forEach(function (el) {
+          el.classList.add('is-in');
+          /* Le chargement paresseux natif repose sur la même mesure
+             d'intersection que l'observateur : dans un conteneur découpé,
+             Chrome ne télécharge jamais l'image. On force le chargement
+             au moment précis où le média se révèle. */
+          if (el.getAttribute('data-reveal') === 'media') {
+            $$('img[loading="lazy"]', el).forEach(function (img) {
+              img.loading = 'eager';
+            });
+          }
+        });
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
 
