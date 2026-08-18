@@ -112,14 +112,25 @@
       groupeDe(target).push(el);
     });
 
+    /* Les animations rejouent à chaque passage. Deux observateurs :
+       — le premier révèle quand l'élément entre dans la zone de lecture ;
+       — le second réarme quand il est ressorti entièrement de l'écran,
+         jamais avant, pour éviter tout clignotement en cours de lecture. */
     var revealer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         groupeDe(entry.target).forEach(function (el) { el.classList.add('is-in'); });
-        revealer.unobserve(entry.target);
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-    cibles.forEach(function (c) { revealer.observe(c[0]); });
+
+    var rearmer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) return;
+        groupeDe(entry.target).forEach(function (el) { el.classList.remove('is-in'); });
+      });
+    }, { threshold: 0 });
+
+    cibles.forEach(function (c) { revealer.observe(c[0]); rearmer.observe(c[0]); });
   } else {
     $$('[data-reveal]').forEach(function (el) { el.classList.add('is-in'); });
   }

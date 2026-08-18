@@ -675,8 +675,9 @@ body.is-locked { overflow: hidden; }
   background: var(--surface);
 }
 .signature__img {
-  width: clamp(5.5rem, 4rem + 6vw, 8.5rem);
-  aspect-ratio: 1;
+  width: clamp(6.5rem, 5rem + 6vw, 10rem);
+  /* ratio naturel de la photo : le mot « DUBOIS » gravé reste entier */
+  aspect-ratio: 1206 / 954;
   border-radius: var(--r-md);
   --ph: #C78E4E;
 }
@@ -968,7 +969,9 @@ body.is-locked { overflow: hidden; }
   display: grid; gap: var(--sp-5);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 }
-.objet .media { aspect-ratio: 1; margin-bottom: var(--sp-4); }
+/* 5/4 plutôt que carré : la photo de la gravure « DUBOIS » (ratio 1,26)
+   n'est presque plus rognée et le mot reste lisible en entier */
+.objet .media { aspect-ratio: 5 / 4; margin-bottom: var(--sp-4); }
 .objet h3 { font-size: var(--t-lg); font-weight: 600; margin-bottom: var(--sp-2); }
 .objet p { font-size: var(--t-sm); color: var(--fg-muted); }
 
