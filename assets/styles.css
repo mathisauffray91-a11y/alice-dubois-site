@@ -494,6 +494,10 @@ body.is-locked { overflow: hidden; }
    7. Média — cadre image avec fond de chargement
    -------------------------------------------------------------------------- */
 .media {
+  /* Ce sont des <span> : sans display explicite ils restent inline, et
+     aspect-ratio y est ignoré tandis que clip-path s'y applique mal.
+     Toute la mise en page des cadres photo repose sur cette ligne. */
+  display: block;
   position: relative; overflow: hidden;
   background: var(--ph, var(--kraft));
   border-radius: var(--r-md);
