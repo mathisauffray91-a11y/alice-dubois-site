@@ -1,0 +1,6 @@
+.DS_Store
+_review.html
+_perf.html
+_r.html
+node_modules/
+.netlify/

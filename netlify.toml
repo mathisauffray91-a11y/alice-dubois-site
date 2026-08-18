@@ -1,0 +1,38 @@
+[build]
+  publish = "."
+
+# ===========================================================================
+# DÉMO — à retirer avant la mise en ligne sur le domaine définitif.
+# Empêche l'indexation par les moteurs de recherche tant que les mentions
+# légales sont incomplètes et que le domaine final n'est pas en place.
+# ===========================================================================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"   # <-- LIGNE À SUPPRIMER pour la mise en ligne réelle
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+# Les images et polices sont versionnées par leur nom : cache long.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/brand/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CSS et JS peuvent changer : revalidation systématique.
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
