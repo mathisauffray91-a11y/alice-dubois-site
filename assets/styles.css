@@ -635,7 +635,9 @@ body.is-locked { overflow: hidden; }
   transition-delay: calc(var(--d, 0) * 80ms);
 }
 .js [data-reveal="media"] img { transform: scale(1.05); }
-.js [data-reveal="media"].is-in { clip-path: inset(0 0 0 0); }
+/* zone de clip élargie une fois révélé, sinon elle rognerait le filet
+   du survol qui se dessine en dehors du cadre */
+.js [data-reveal="media"].is-in { clip-path: inset(-1.75rem); }
 .js [data-reveal="media"].is-in img {
   transform: none;
   transition: transform 1.4s var(--ease-out), opacity .7s var(--ease-out);
@@ -712,11 +714,12 @@ body.is-locked { overflow: hidden; }
 }
 .filter__n { font-family: var(--font-mono); font-size: 10px; opacity: .65; margin-left: .4em; }
 
-/* Mise en colonnes plutôt qu'en grille : dans une grille, chaque rangée prend
-   la hauteur de sa carte la plus haute, et une photo en paysage laisse un vide
-   sous elle. Ici les cartes s'empilent librement, décalées les unes des autres,
-   et le navigateur équilibre les colonnes — aucun trou, quel que soit le
-   nombre de réalisations affichées. */
+/* Les réalisations sont posées en mosaïque : chaque carte rejoint la colonne
+   la plus courte, ce qui évite le vide sous une photo en paysage comme le
+   vide en fin de colonne. Le calcul est fait en JavaScript, car l'équilibrage
+   natif de CSS columns diffère d'un navigateur à l'autre — Safari laissait
+   une colonne bien plus courte que Chrome. La règle columns ci-dessous reste
+   le repli si le JavaScript ne s'exécute pas. */
 .works {
   --works-gap: clamp(1.5rem, .9rem + 2.4vw, 2.75rem);
   columns: 1;
@@ -728,9 +731,13 @@ body.is-locked { overflow: hidden; }
 .work {
   break-inside: avoid;
   -webkit-column-break-inside: avoid;
-  page-break-inside: avoid;   /* pour les moteurs les plus anciens */
   margin-bottom: var(--works-gap);
 }
+
+/* Mosaïque pilotée : les cartes sont positionnées une à une */
+.works.is-mosaique { columns: auto; position: relative; }
+.works.is-mosaique .work { position: absolute; margin-bottom: 0; }
+
 .work.is-hidden { display: none; }
 .js .work { transition: opacity .4s var(--ease), transform .4s var(--ease); }
 .js .work.is-filtering { opacity: 0; transform: scale(.985); }
@@ -741,35 +748,24 @@ body.is-locked { overflow: hidden; }
   display: block; width: 100%; text-align: left; cursor: pointer;
   border-radius: var(--r-md);
 }
+
+/* Le filet du survol est tracé par outline : contrairement à un pseudo-élément,
+   il se dessine EN DEHORS du cadre et n'est pas rogné par l'overflow de la
+   photo. Il part large et vient se resserrer autour de l'image. */
 .work__media {
   aspect-ratio: var(--ar, 4 / 5);
   margin-bottom: var(--sp-4);
+  outline: 1.5px solid transparent;
+  outline-offset: 1rem;
+  transition: outline-color .45s var(--ease-out), outline-offset .55s var(--ease-out);
+}
+.work__btn:hover .work__media,
+.work__btn:focus-visible .work__media {
+  outline-color: var(--accent);
+  outline-offset: 0.5rem;
 }
 .work__media img { transition: transform .8s var(--ease-out), opacity .7s var(--ease-out); }
 .work__btn:hover .work__media img.is-loaded { transform: scale(1.04); }
-
-/* Au survol, un filet fin se resserre sur la photo. Il part légèrement en
-   retrait et vient épouser le cadre : l'apparition se fait par le mouvement
-   autant que par l'opacité. */
-.work__media::after {
-  content: "";
-  position: absolute; inset: 0.75rem;
-  border: 1px solid rgba(247, 243, 235, .92);
-  /* Un filet clair disparaîtrait sur les photos claires — cuisines blanches,
-     dressings laqués. Deux ombres d'un pixel, de part et d'autre du trait,
-     lui donnent une assise sombre : il se détache sur n'importe quel fond. */
-  box-shadow: 0 0 0 1px rgba(27, 23, 20, .22),
-              inset 0 0 0 1px rgba(27, 23, 20, .22);
-  border-radius: 3px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .45s var(--ease-out), inset .55s var(--ease-out);
-}
-.work__btn:hover .work__media::after,
-.work__btn:focus-visible .work__media::after {
-  opacity: 1;
-  inset: 0.5rem;
-}
 
 .work__cat {
   font-family: var(--font-mono); font-size: var(--t-xs);

@@ -196,8 +196,125 @@
     btn.addEventListener('click', function () {
       filters.forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
       applyFilter(btn.dataset.filter);
+      window.setTimeout(mosaique, 220);   // après la transition de filtrage
     });
   });
+
+  /* ------------------------------------------------------- Mosaïque ------ */
+  /* Chaque carte rejoint la colonne la plus courte. L'équilibrage natif de
+     CSS columns dépend du navigateur — Safari laissait une colonne bien plus
+     courte que Chrome — alors qu'ici le résultat est identique partout. */
+  var grille = $('#works');
+
+  function nbColonnes() {
+    var l = window.innerWidth;
+    if (l >= 1200) return 3;      // 75rem
+    if (l >= 640)  return 2;      // 40rem
+    return 1;
+  }
+
+  /* Meilleure répartition possible de `hs` sur `n` colonnes, l'ordre du
+     document étant conservé à l'intérieur de chaque colonne. Les n premières
+     cartes ouvrent chacune une colonne, pour que le haut reste naturel. */
+  function repartir(hs, n) {
+    var i, j;
+    if (n === 1) return { affect: hs.map(function () { return 0; }), ecart: 0 };
+    function ecartDe(a) {
+      var col = [];
+      for (j = 0; j < n; j++) col.push(0);
+      for (j = 0; j < a.length; j++) col[a[j]] += hs[j];
+      return Math.max.apply(null, col) - Math.min.apply(null, col);
+    }
+    if (hs.length <= 14) {
+      var fixe = Math.min(n, hs.length);
+      var libres = hs.length - fixe;
+      var meilleur = null, mini = Infinity;
+      var total = Math.pow(n, libres);
+      for (var essai = 0; essai < total; essai++) {
+        var a = [];
+        for (i = 0; i < fixe; i++) a.push(i);
+        var reste = essai;
+        for (i = 0; i < libres; i++) { a.push(reste % n); reste = Math.floor(reste / n); }
+        var e = ecartDe(a);
+        if (e < mini) { mini = e; meilleur = a; }
+      }
+      return { affect: meilleur, ecart: mini };
+    }
+    // au-delà de 14 cartes : remplissage de la colonne la plus courte
+    var col = [], affect = [];
+    for (i = 0; i < n; i++) col.push(0);
+    for (i = 0; i < hs.length; i++) {
+      var k = 0;
+      for (j = 1; j < n; j++) if (col[j] < col[k]) k = j;
+      affect.push(k); col[k] += hs[i];
+    }
+    return { affect: affect, ecart: Math.max.apply(null, col) - Math.min.apply(null, col) };
+  }
+
+  function mosaique() {
+    if (!grille) return;
+    var n = nbColonnes();
+    var cartes = works.filter(function (w) { return !w.classList.contains('is-hidden'); });
+
+    if (n === 1) {                       // une seule colonne : flux naturel
+      grille.classList.remove('is-mosaique');
+      grille.style.height = '';
+      cartes.forEach(function (c) { c.style.width = c.style.left = c.style.top = ''; });
+      return;
+    }
+
+    var ecart = parseFloat(getComputedStyle(grille).columnGap) || 0;
+    grille.classList.add('is-mosaique');
+
+    /* On retient le plus grand nombre de colonnes qui reste équilibré : quatre
+       réalisations sur trois colonnes laissent forcément une colonne courte,
+       on redescend alors à deux. Jamais en dessous de deux tant que l'écran le
+       permet — une colonne unique donnerait des photos démesurées. */
+    var plancher = nbColonnes() >= 2 ? 2 : 1;
+    var choix = null;
+    for (var essai = n; essai >= plancher; essai--) {
+      var larg = (grille.clientWidth - ecart * (essai - 1)) / essai;
+      var hauteurs = cartes.map(function (c) {
+        c.style.width = larg + 'px';
+        return c.offsetHeight + ecart;
+      });
+      var r = repartir(hauteurs, essai);
+      if (!choix || r.ecart < choix.ecart) {
+        choix = { n: essai, largeur: larg, hs: hauteurs, affect: r.affect, ecart: r.ecart };
+      }
+      if (r.ecart <= 220) break;   // assez équilibré : on garde le plus de colonnes
+    }
+
+    var i;
+    cartes.forEach(function (c) { c.style.width = choix.largeur + 'px'; });
+
+    var curseurs = [];
+    for (i = 0; i < choix.n; i++) curseurs.push(0);
+    cartes.forEach(function (c, idx) {
+      var k = choix.affect[idx];
+      c.style.left = (k * (choix.largeur + ecart)) + 'px';
+      c.style.top  = curseurs[k] + 'px';
+      curseurs[k] += choix.hs[idx];
+    });
+
+    grille.style.height = (Math.max.apply(null, curseurs) - ecart) + 'px';
+  }
+
+  if (grille) {
+    mosaique();
+    // les hauteurs changent quand une photo ou une police arrive
+    $$('.work img').forEach(function (img) {
+      img.addEventListener('load', mosaique, { once: true });
+    });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(mosaique);
+    window.addEventListener('load', mosaique);
+
+    var minuteur = null;
+    window.addEventListener('resize', function () {
+      window.clearTimeout(minuteur);
+      minuteur = window.setTimeout(mosaique, 120);
+    }, { passive: true });
+  }
 
   /* ------------------------------------------------ Fiches projets ------- */
   var PROJETS = {
