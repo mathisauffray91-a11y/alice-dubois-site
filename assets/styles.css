@@ -720,7 +720,10 @@ body.is-locked { overflow: hidden; }
 }
 @media (min-width: 40rem) { .works { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 75rem) { .works { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (min-width: 75rem) { .work--feature { grid-column: span 2; } }
+/* Les 12 cartes occupent une colonne chacune : la grille tombe juste en 2
+   comme en 3 colonnes, sans carte esseulée en fin de série. Le rythme vient
+   des rapports d'image, qui diffèrent d'une photo à l'autre. */
+.works { grid-auto-flow: dense; }
 
 .work.is-hidden { display: none; }
 .js .work { transition: opacity .4s var(--ease), transform .4s var(--ease); }
