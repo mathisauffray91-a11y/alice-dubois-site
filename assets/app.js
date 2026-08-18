@@ -93,15 +93,33 @@
   }
 
   /* ------------------------------------------- Révélation au défilement -- */
+  /* Les éléments « mask » et « media » démarrent avec un clip-path qui les
+     rend entièrement invisibles ; Chrome en déduit une zone d'intersection
+     nulle et l'observateur ne se déclenche jamais. On observe donc leur
+     parent (non découpé) et on révèle le groupe entier. */
   if ('IntersectionObserver' in window && !reduced.matches) {
+    var cibles = [];   // [élément observé, [éléments à révéler]]
+    function groupeDe(target) {
+      for (var i = 0; i < cibles.length; i++) {
+        if (cibles[i][0] === target) return cibles[i][1];
+      }
+      var g = []; cibles.push([target, g]); return g;
+    }
+    $$('[data-reveal]').forEach(function (el) {
+      var type = el.getAttribute('data-reveal');
+      var clippe = type === 'mask' || type === 'media';
+      var target = clippe && el.parentElement ? el.parentElement : el;
+      groupeDe(target).push(el);
+    });
+
     var revealer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
+        groupeDe(entry.target).forEach(function (el) { el.classList.add('is-in'); });
         revealer.unobserve(entry.target);
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-    $$('[data-reveal]').forEach(function (el) { revealer.observe(el); });
+    cibles.forEach(function (c) { revealer.observe(c[0]); });
   } else {
     $$('[data-reveal]').forEach(function (el) { el.classList.add('is-in'); });
   }
@@ -126,22 +144,6 @@
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
     sections.forEach(function (s) { spy.observe(s); });
-  }
-
-  /* --------------------------------------------------- Étapes du process - */
-  var stepEls = $$('#steps .step');
-  var stepImgs = $$('#process-media img[data-step]');
-  function setStep(n) {
-    stepEls.forEach(function (el) { el.classList.toggle('is-active', el.dataset.step === n); });
-    stepImgs.forEach(function (im) { im.classList.toggle('is-active', im.dataset.step === n); });
-  }
-  if ('IntersectionObserver' in window && stepEls.length) {
-    var stepSpy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) setStep(entry.target.dataset.step);
-      });
-    }, { rootMargin: '-42% 0px -42% 0px' });
-    stepEls.forEach(function (el) { stepSpy.observe(el); });
   }
 
   /* ----------------------------------------------- Filtres réalisations -- */
@@ -495,8 +497,7 @@
     });
   }
 
-  /* -------------------------------------- Parallaxe légère + défilement -- */
-  var parallaxItems = $$('.media--parallax');
+  /* --------------------------------------------------- Défilement ------- */
   var ticking = false;
 
   function onScroll() {
@@ -504,18 +505,6 @@
     ticking = true;
     window.requestAnimationFrame(function () {
       onScrollHeader();
-      if (!reduced.matches) {
-        var vh = window.innerHeight;
-        parallaxItems.forEach(function (el) {
-          var r = el.getBoundingClientRect();
-          if (r.bottom < -200 || r.top > vh + 200) return;
-          var progress = (r.top + r.height / 2 - vh / 2) / vh;   // -1 … 1
-          var shift = Math.max(-14, Math.min(14, progress * -18));
-          $$('img', el).forEach(function (im) {
-            im.style.transform = 'translate3d(0,' + shift.toFixed(2) + 'px,0) scale(1.06)';
-          });
-        });
-      }
       ticking = false;
     });
   }

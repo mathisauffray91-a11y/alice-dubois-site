@@ -507,8 +507,6 @@ body.is-locked { overflow: hidden; }
 .media > img.is-loaded { opacity: 1; }
 .media--fill { position: absolute; inset: 0; border-radius: 0; }
 
-/* Effet de parallaxe très léger (désactivé si mouvement réduit) */
-.media--parallax > img { will-change: transform; }
 
 /* --------------------------------------------------------------------------
    8. Hero
@@ -852,44 +850,41 @@ body.is-locked { overflow: hidden; }
 
 /* --------------------------------------------------------------------------
    13. Savoir-faire (étapes)
+   Une rangée par étape, photo comprise : la page défile normalement,
+   rien n'est épinglé, aucune image ne change sous le pointeur.
    -------------------------------------------------------------------------- */
-.process__grid { display: grid; gap: clamp(2.5rem, 1.5rem + 4vw, 4.5rem); }
-@media (min-width: 62rem) {
-  .process__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: start; }
-}
-.process__sticky { position: static; }
-@media (min-width: 62rem) {
-  .process__sticky { position: sticky; top: 7.5rem; }
-}
-.process__media { aspect-ratio: 4 / 5; border-radius: var(--r-lg); }
-.process__media img { position: absolute; inset: 0; }
-.process__media img[data-step] { opacity: 0; transition: opacity .6s var(--ease-out); }
-.process__media img[data-step].is-active { opacity: 1; }
-
 .steps { display: grid; }
 .step {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--sp-4) var(--sp-5);
-  padding-block: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  gap: var(--sp-5) clamp(2rem, 1rem + 3vw, 4rem);
+  padding-block: clamp(2rem, 1.4rem + 2.5vw, 3.5rem);
   border-top: 1px solid var(--line);
-  transition: opacity var(--dur) var(--ease);
+  align-items: center;
 }
 .step:last-child { border-bottom: 1px solid var(--line); }
-@media (min-width: 62rem) { .step { opacity: .42; } .step.is-active { opacity: 1; } }
+@media (min-width: 48rem) {
+  .step { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+}
+.step__media {
+  aspect-ratio: var(--ar, 4 / 5);
+  border-radius: var(--r-lg);
+  width: 100%;
+  max-width: 26rem;
+}
+@media (max-width: 47.99rem) { .step__media { max-width: 20rem; } }
 .step__n {
+  display: block;
   font-family: var(--font-mono); font-size: var(--t-xs);
   letter-spacing: .1em;
   color: var(--accent);
-  padding-top: .45em;
+  margin-bottom: var(--sp-3);
 }
-.step__title { font-size: var(--t-xl); margin-bottom: var(--sp-3); }
-.step__text { color: var(--fg-muted); font-size: var(--t-base); max-width: 46ch; }
+.step__title { font-size: var(--t-2xl); line-height: 1.12; margin-bottom: var(--sp-4); }
+.step__text { color: var(--fg-muted); font-size: var(--t-base); max-width: 52ch; }
 .step__tags {
   display: flex; flex-wrap: wrap; gap: var(--sp-2);
-  margin-top: var(--sp-4); grid-column: 1 / -1;
+  margin-top: var(--sp-5);
 }
-@media (min-width: 30rem) { .step__tags { grid-column: 2; } }
 .tag {
   font-family: var(--font-mono); font-size: 10px;
   letter-spacing: .1em; text-transform: uppercase;
@@ -1166,7 +1161,6 @@ select.field__control {
   .js .hero__fade { opacity: 1 !important; }
   .menu.is-open .menu__link { opacity: 1; transform: none; animation: none; }
   .cursor { display: none !important; }
-  .media--parallax > img { transform: none !important; }
 }
 
 /* Impression */
