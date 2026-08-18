@@ -17,14 +17,50 @@ Ces points demandent des informations que je n'avais pas. Tout le reste est prê
 | `index.html` — `<link rel="canonical">`, `og:image`, `sitemap.xml`, `robots.txt` | Remplacer `alicedubois.fr` par le domaine définitif. |
 | Témoignages clients | Section volontairement absente : je n'invente pas d'avis. Le bloc est prêt à écrire dès que de vrais retours sont disponibles (voir « Ajouter des témoignages » plus bas). |
 
-## Déploiement Netlify
+## Mise en ligne
 
-1. Glisser le dossier `ebeniste-dubois/` sur [app.netlify.com/drop](https://app.netlify.com/drop), ou connecter le dépôt Git.
-2. Aucune commande de build, aucun dossier de publication à configurer : `netlify.toml` s'en charge.
-3. Dans **Site settings → Forms**, vérifier que le formulaire `devis` est bien détecté, puis ajouter une notification par e-mail vers `alice.dubois77@yahoo.fr`.
+Le site est un dossier statique : il fonctionne sur n'importe quel hébergeur, sans build.
 
-Le formulaire utilise Netlify Forms (`data-netlify="true"`) avec un piège anti-spam (`netlify-honeypot="societe"`).
-**En local, l'envoi échoue forcément** (un serveur de fichiers statiques ne traite pas les POST) : le message d'erreur qui s'affiche alors est le comportement normal, avec repli sur l'e-mail et le téléphone.
+**Deux réglages « démo » à retirer le jour de la vraie mise en ligne :**
+
+1. `index.html` — la balise `<meta name="robots" content="noindex, nofollow">` (ligne 9)
+2. `netlify.toml` — la ligne `X-Robots-Tag`
+3. `mentions-legales.html` — la balise `robots` peut rester en `noindex`
+
+Elles empêchent l'indexation par Google tant que les mentions légales sont incomplètes.
+
+### Option A — GitHub Pages (gratuit, sans limite)
+
+Le dépôt Git est déjà initialisé et le premier commit est fait. Il reste à créer le dépôt
+distant et à activer Pages :
+
+```bash
+cd "/Users/mathisauffray/Documents/Claude code/ebeniste-dubois" && gh repo create alice-dubois-site --public --source=. --push && gh api -X POST "repos/{owner}/alice-dubois-site/pages" -f "source[branch]=main" -f "source[path]=/"
+```
+
+L'adresse sera `https://<votre-compte>.github.io/alice-dubois-site/`, active en 1 à 2 minutes.
+
+Limite : GitHub Pages ne traite pas les formulaires. La demande de devis basculera
+automatiquement sur le repli e-mail (bouton « Envoyer par e-mail », message pré-rempli).
+
+### Option B — Netlify (formulaire fonctionnel)
+
+Netlify est le meilleur choix **parce que le formulaire de devis y fonctionne vraiment**.
+Attention : au moment de la livraison, le compte affichait
+`Account credit usage exceeded - new deploys are blocked until credits are added`.
+Il faut donc régler ce point sur le compte avant de pouvoir déployer.
+
+Le site `alice-dubois` a déjà été créé et lié au dossier. Une fois les crédits rétablis :
+
+```bash
+cd "/Users/mathisauffray/Documents/Claude code/ebeniste-dubois" && npx netlify-cli deploy --prod --dir=.
+```
+
+Sinon, dépôt manuel du zip sur [app.netlify.com/drop](https://app.netlify.com/drop).
+
+Puis dans **Site configuration → Forms**, vérifier que le formulaire `devis` est détecté et
+ajouter une notification par e-mail. Le formulaire utilise Netlify Forms
+(`data-netlify="true"`) avec un piège anti-spam (`netlify-honeypot="societe"`).
 
 ## Structure
 
