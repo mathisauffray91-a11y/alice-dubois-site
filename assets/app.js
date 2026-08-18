@@ -207,8 +207,7 @@
       desc: "Un plateau ovale galbé posé sur un fût octogonal taillé dans la masse. Le trait de refend au centre du plateau et la petite goupille apparente signent l'assemblage plutôt que de le cacher.",
       specs: [['Essence', 'Frêne massif'], ['Type', 'Table de repas'], ['Finition', 'Naturelle, chants adoucis'], ['Particularité', 'Piètement octogonal monobloc']],
       images: [
-        ['table-frene-massif', 'Table ronde en frêne massif vue de trois quarts, devant un mur gris foncé.', 1566, 1005],
-        ['table-frene-detail', "Détail du plateau : trait de refend, goupille et chants massifs, marqués du nom Dubois.", 1206, 773]
+        ['table-frene-massif', 'Table ronde en frêne massif vue de trois quarts, devant un mur gris foncé.', 1566, 1005]
       ]
     },
     'dressing-chene': {
