@@ -185,11 +185,17 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: .18em;
   text-transform: uppercase;
   color: var(--fg-muted);
-  display: inline-flex; align-items: center; gap: var(--sp-3);
+  /* bloc, et non inline-flex : un flex n'aurait pas laissé le texte
+     revenir à la ligne, ce qui débordait sur les petits écrans */
+  display: block;
 }
 .label::before {
-  content: ""; width: 1.75rem; height: 1px;
-  background: currentColor; opacity: .5; flex: none;
+  content: "";
+  display: inline-block;
+  width: 1.75rem; height: 1px;
+  margin-right: var(--sp-3);
+  vertical-align: middle;
+  background: currentColor; opacity: .5;
 }
 .label--plain::before { display: none; }
 
@@ -531,8 +537,11 @@ body.is-locked { overflow: hidden; }
 }
 .hero__label { color: var(--camel-light); margin-bottom: var(--sp-5); }
 .hero__title {
-  /* borné par la hauteur d'écran : l'appel à l'action reste toujours visible */
-  font-size: min(var(--t-5xl), 12svh);
+  /* borné par la hauteur d'écran (l'appel à l'action reste visible) ET par la
+     largeur. 12vw vient d'une mesure : la ligne la plus large, « épousent vos
+     murs, », occupe 6,98 px par pixel de corps ; à 12vw elle garde toujours
+     au moins 4 % de marge dans la gouttière. */
+  font-size: min(var(--t-5xl), 12svh, 12vw);
   max-width: 16ch;
   margin-bottom: var(--sp-5);
 }
