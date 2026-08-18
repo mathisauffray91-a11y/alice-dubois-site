@@ -140,44 +140,47 @@ for w in (640, 1200):
 
 ## Photos
 
-Les 25 visuels viennent de l'atelier. **Ce sont des captures d'écran d'iPhone**, pas des
-exports photo : aucune donnée EXIF, et deux largeurs caractéristiques (828 px et 1206 px,
-soit les résolutions d'écran d'un iPhone XR/11 et d'un iPhone 16 Pro). Résolution moyenne :
-**1,09 mégapixel**, quand une image 4K en compte 8,29. Il manque donc 87 % des pixels — aucun
-agrandissement ne peut les inventer.
+Les 22 visuels principaux ont été **régénérés par IA générative** (ChatGPT Image) à partir
+des captures d'écran d'origine, puis intégrés tels quels — sans retouche de couleur, ces
+images étant déjà étalonnées. Seul un léger renforcement est appliqué après réduction,
+une réduction adoucissant toujours l'image.
 
-### Traitement appliqué
+Sources conservées dans `Clients/ebeniste.dubois/Photos-HD/`.
 
-Un traitement volontairement retenu, adaptatif : plus une photo a déjà une dynamique
-pleine, moins on intervient (10 des 25 photos avaient une vraie marge).
+### Ce qu'il faut savoir sur ces images
 
-1. Récupération de la moitié de la marge de dynamique seulement — jamais de sur-étirement.
-2. Micro-contraste en S de 5 à 10 %, selon la marge.
-3. Saturation de 0 à +4 %, selon la marge.
-4. Masque flou léger (rayon 1,0 ; 58 %, seuil 3).
+**Ce ne sont pas des agrandissements : ce sont des régénérations.** Un modèle génératif
+redessine l'image plutôt que de l'agrandir. Sur le test de la table en frêne, comparé à
+l'original : plateau devenu une ellipse franche au lieu d'un ovale carré, incrustation
+centrale de forme différente, piètement plus étroit, sol noir au lieu de bleu marine,
+veinage entièrement réinventé.
 
-Les niveaux sont calculés sur la luminance et appliqués identiquement aux trois canaux :
-le contraste monte sans dérive de couleur, la chaleur du bois est préservée.
+Deux conséquences à garder en tête :
 
-Un premier essai plus appuyé (saturation +7 %, S à 14 %) faisait virer les photos de chêne
-à l'orange : effet « filtre », l'inverse d'un rendu professionnel. D'où la version douce.
+1. **Ce sont des représentations, pas des preuves.** Un client qui commande d'après ces
+   photos peut recevoir un meuble visiblement différent. À arbitrer avec Alice.
+2. **Le gain est esthétique, pas en résolution.** Ces fichiers font environ 1,5 Mpx,
+   contre 1,09 Mpx pour les captures d'origine — et 8,29 Mpx pour de la vraie 4K.
+
+Bonne surprise en revanche : le logo DUBOIS gravé et les prénoms « Claude » et « Sylvie »
+sont restés parfaitement lisibles, alors que c'était le risque principal attendu.
+
+### Deux originaux conservés
+
+- `table-frene-detail` — deuxième photo de la fiche table
+- `logo-carre` — source du favicon et du logo du site : à ne jamais régénérer
 
 ### Formats servis
 
 `<picture>` avec AVIF en premier et WebP en repli, en deux largeurs (640 et 1200 px).
-À qualité équivalente, l'AVIF est **22 à 24 % plus léger** que le WebP.
-Un visiteur moderne ne télécharge que l'AVIF.
+À qualité équivalente l'AVIF est 22 à 24 % plus léger ; un visiteur moderne ne
+télécharge que lui.
 
-### Pour aller plus loin
+### Le chemin qui reste ouvert
 
-Le vrai palier ne se joue pas dans le code. Deux leviers, par ordre d'efficacité :
-
-1. **Récupérer les originaux.** Les photos existent presque certainement en 12 mégapixels
-   (4032 × 3024) dans la pellicule d'Alice. Ce serait 3 à 4 fois plus de détail réel,
-   gratuitement. Il faut les envoyer par AirDrop ou en « taille réelle » — surtout pas par
-   messagerie ni via une capture d'écran, qui recompressent.
-2. **Une série photo commissionnée.** Le rendu « photographe professionnel » tient à la
-   lumière, au cadrage et au rangement du décor, pas au nombre de pixels.
+Si Alice fournit ses originaux de pellicule (probablement 12 Mpx), on obtient du détail
+**réel** plutôt que recomposé — et le doute sur la fidélité disparaît. Les fichiers doivent
+être transmis par AirDrop ou en « taille réelle », jamais par messagerie ni capture d'écran.
 
 ## Ce qui a été vérifié
 
