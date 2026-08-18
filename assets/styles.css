@@ -712,22 +712,30 @@ body.is-locked { overflow: hidden; }
 }
 .filter__n { font-family: var(--font-mono); font-size: 10px; opacity: .65; margin-left: .4em; }
 
+/* Mise en colonnes plutôt qu'en grille : dans une grille, chaque rangée prend
+   la hauteur de sa carte la plus haute, et une photo en paysage laisse un vide
+   sous elle. Ici les cartes s'empilent librement, décalées les unes des autres,
+   et le navigateur équilibre les colonnes — aucun trou, quel que soit le
+   nombre de réalisations affichées. */
 .works {
-  display: grid;
-  gap: clamp(1.5rem, .9rem + 2.4vw, 2.75rem);
-  grid-template-columns: 1fr;
-  align-items: start;
+  --works-gap: clamp(1.5rem, .9rem + 2.4vw, 2.75rem);
+  columns: 1;
+  column-gap: var(--works-gap);
 }
-@media (min-width: 40rem) { .works { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 75rem) { .works { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-/* Les 12 cartes occupent une colonne chacune : la grille tombe juste en 2
-   comme en 3 colonnes, sans carte esseulée en fin de série. Le rythme vient
-   des rapports d'image, qui diffèrent d'une photo à l'autre. */
-.works { grid-auto-flow: dense; }
+@media (min-width: 40rem) { .works { columns: 2; } }
+@media (min-width: 75rem) { .works { columns: 3; } }
 
+.work {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;   /* pour les moteurs les plus anciens */
+  margin-bottom: var(--works-gap);
+}
 .work.is-hidden { display: none; }
 .js .work { transition: opacity .4s var(--ease), transform .4s var(--ease); }
 .js .work.is-filtering { opacity: 0; transform: scale(.985); }
+
+.works__empty { column-span: all; }
 
 .work__btn {
   display: block; width: 100%; text-align: left; cursor: pointer;
@@ -740,12 +748,28 @@ body.is-locked { overflow: hidden; }
 .work__media img { transition: transform .8s var(--ease-out), opacity .7s var(--ease-out); }
 .work__btn:hover .work__media img.is-loaded { transform: scale(1.04); }
 
+/* Au survol, un filet fin se resserre sur la photo. Il part légèrement en
+   retrait et vient épouser le cadre : l'apparition se fait par le mouvement
+   autant que par l'opacité. */
 .work__media::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(27,23,20,.34), rgba(27,23,20,0) 45%);
-  opacity: 0; transition: opacity var(--dur) var(--ease);
+  content: "";
+  position: absolute; inset: 0.75rem;
+  border: 1px solid rgba(247, 243, 235, .92);
+  /* Un filet clair disparaîtrait sur les photos claires — cuisines blanches,
+     dressings laqués. Deux ombres d'un pixel, de part et d'autre du trait,
+     lui donnent une assise sombre : il se détache sur n'importe quel fond. */
+  box-shadow: 0 0 0 1px rgba(27, 23, 20, .22),
+              inset 0 0 0 1px rgba(27, 23, 20, .22);
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .45s var(--ease-out), inset .55s var(--ease-out);
 }
-.work__btn:hover .work__media::after { opacity: 1; }
+.work__btn:hover .work__media::after,
+.work__btn:focus-visible .work__media::after {
+  opacity: 1;
+  inset: 0.5rem;
+}
 
 .work__cat {
   font-family: var(--font-mono); font-size: var(--t-xs);
@@ -766,23 +790,6 @@ body.is-locked { overflow: hidden; }
   padding: var(--sp-8) 0;
   text-align: center; color: var(--fg-muted);
 }
-
-/* Curseur personnalisé « Voir » (pointeur fin uniquement) */
-.cursor {
-  position: fixed; top: 0; left: 0; z-index: 90;
-  width: 5.25rem; height: 5.25rem;
-  border-radius: 999px;
-  background: var(--terracotta); color: #fff;
-  display: none; place-items: center;
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: .16em; text-transform: uppercase;
-  pointer-events: none;
-  transform: translate(-50%, -50%) scale(.2);
-  opacity: 0;
-  transition: opacity .25s var(--ease), transform .35s var(--ease-out);
-}
-@media (hover: hover) and (pointer: fine) { .cursor { display: grid; } }
-.cursor.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
 /* --------------------------------------------------------------------------
    12. Visionneuse (modale projet)
@@ -1169,12 +1176,11 @@ select.field__control {
   .js .hero .reveal-line > span { transform: none !important; }
   .js .hero__fade { opacity: 1 !important; }
   .menu.is-open .menu__link { opacity: 1; transform: none; animation: none; }
-  .cursor { display: none !important; }
 }
 
 /* Impression */
 @media print {
-  .header, .menu, .cursor, .viewer, .footer__veine, .veine { display: none !important; }
+  .header, .menu, .viewer, .footer__veine, .veine { display: none !important; }
   body { background: #fff; color: #000; }
   .section { padding-block: 1.5rem; }
 }

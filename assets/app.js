@@ -354,25 +354,6 @@
     });
   }
 
-  /* ------------------------------------------------- Curseur « Voir » ---- */
-  var cursor = $('#cursor');
-  var fine = window.matchMedia('(hover: hover) and (pointer: fine)');
-  if (cursor && fine.matches && !reduced.matches) {
-    var cx = 0, cy = 0, raf = null;
-    function move() { cursor.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)'; raf = null; }
-    document.addEventListener('pointermove', function (e) {
-      cx = e.clientX; cy = e.clientY;
-      if (!raf) raf = window.requestAnimationFrame(move);
-    }, { passive: true });
-
-    $$('.work__btn').forEach(function (btn) {
-      btn.addEventListener('pointerenter', function () { cursor.classList.add('is-on'); });
-      btn.addEventListener('pointerleave', function () { cursor.classList.remove('is-on'); });
-    });
-    // le curseur ne doit pas survivre à l'ouverture d'une fiche
-    document.addEventListener('click', function () { cursor.classList.remove('is-on'); });
-  }
-
   /* ----------------------------------------------------- Matières -------- */
   var MATIERES = {
     chene: {
