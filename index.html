@@ -64,7 +64,7 @@
       <a class="nav__link" href="#savoir-faire">Savoir-faire</a>
       <a class="nav__link" href="#atelier">L'atelier</a>
       <a class="nav__link" href="#matieres">Matières</a>
-      <a class="nav__link" href="#devis">Devis</a>
+      <a class="nav__link" href="#devis">Contact et devis</a>
     </nav>
 
     <div class="header__actions">
@@ -95,7 +95,7 @@
     <a class="menu__link" href="#savoir-faire" style="animation-delay:.12s"><span>02</span>Savoir-faire</a>
     <a class="menu__link" href="#atelier"      style="animation-delay:.18s"><span>03</span>L'atelier</a>
     <a class="menu__link" href="#matieres"     style="animation-delay:.24s"><span>04</span>Matières</a>
-    <a class="menu__link" href="#devis"        style="animation-delay:.30s"><span>05</span>Devis</a>
+    <a class="menu__link" href="#devis"        style="animation-delay:.30s"><span>05</span>Contact et devis</a>
   </nav>
 
   <div class="menu__foot">
@@ -663,31 +663,44 @@
 
     <div class="devis__grid">
       <aside class="devis__aside" data-reveal>
-        <ul class="devis__list">
+        <ol class="devis__etapes">
           <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Premier échange gratuit.</strong> On cadre l'usage, l'emplacement et l'enveloppe budgétaire avant de se déplacer.</span>
+            <span class="devis__num" aria-hidden="true">01</span>
+            <div>
+              <h3>Premier échange</h3>
+              <p>On cadre l'usage, l'emplacement et l'enveloppe budgétaire avant de se déplacer. Gratuit et sans engagement.</p>
+            </div>
           </li>
           <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Visite &amp; relevé.</strong> Prise de cotes sur place, photos, repérage des contraintes techniques.</span>
+            <span class="devis__num" aria-hidden="true">02</span>
+            <div>
+              <h3>Visite &amp; relevé</h3>
+              <p>Prise de cotes sur place, photos, repérage des contraintes techniques.</p>
+            </div>
           </li>
           <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            <span><strong>Devis &amp; vues 3D.</strong> Un document clair : matériaux, finitions, quincaillerie, pose et délai.</span>
+            <span class="devis__num" aria-hidden="true">03</span>
+            <div>
+              <h3>Devis &amp; vues 3D</h3>
+              <p>Un document clair : matériaux, finitions, quincaillerie, pose et délai.</p>
+            </div>
           </li>
-        </ul>
+        </ol>
 
-        <div>
-          <p class="label label--plain" style="margin-bottom:var(--sp-4)">Contact direct</p>
-          <p style="display:grid;gap:var(--sp-2)">
-            <a class="link-u" href="tel:+33610420678">06 10 42 06 78</a>
-            <a class="link-u" href="mailto:alice.dubois77@yahoo.fr">alice.dubois77@yahoo.fr</a>
-          </p>
+        <div class="devis__contact">
+          <p class="label label--plain">Ou directement</p>
+          <a class="devis__tel" href="tel:+33610420678">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.2-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.8 2.1Z"/></svg>
+            <span>06 10 42 06 78</span>
+          </a>
+          <a class="devis__mail" href="mailto:alice.dubois77@yahoo.fr">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            <span>alice.dubois77@yahoo.fr</span>
+          </a>
         </div>
       </aside>
 
-      <form class="form" id="devis-form" name="devis" method="POST"
+      <form class="form form--carte" id="devis-form" name="devis" method="POST"
             data-netlify="true" netlify-honeypot="societe" novalidate data-reveal style="--d:1">
         <input type="hidden" name="form-name" value="devis">
         <p hidden><label>Ne pas remplir : <input name="societe" tabindex="-1" autocomplete="off"></label></p>
@@ -938,6 +951,7 @@
           <li><a href="#savoir-faire">Savoir-faire</a></li>
           <li><a href="#atelier">L'atelier</a></li>
           <li><a href="#matieres">Matières</a></li>
+          <li><a href="#devis">Contact et devis</a></li>
           <li><a href="#faq">Questions fréquentes</a></li>
         </ul>
       </div>

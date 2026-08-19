@@ -987,17 +987,71 @@ body.is-locked { overflow: hidden; }
 /* --------------------------------------------------------------------------
    17. Devis — formulaire
    -------------------------------------------------------------------------- */
-.devis__grid { display: grid; gap: clamp(2.5rem, 1.5rem + 4vw, 5rem); align-items: start; }
+.devis__grid { display: grid; gap: clamp(2.5rem, 1.5rem + 4vw, 4.5rem); align-items: start; }
 @media (min-width: 62rem) {
-  .devis__grid { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+  .devis__grid { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  /* la colonne de gauche suit la lecture du formulaire : le contact reste
+     sous les yeux, et le bas de section ne se creuse pas */
+  .devis__aside { position: sticky; top: 7.5rem; }
 }
-.devis__aside > * + * { margin-top: var(--sp-6); }
-.devis__list { display: grid; gap: var(--sp-4); }
-.devis__list li {
+
+.devis__etapes { display: grid; gap: var(--sp-5); }
+.devis__etapes li {
   display: grid; grid-template-columns: auto 1fr; gap: var(--sp-4);
-  font-size: var(--t-sm); color: var(--fg-muted);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
 }
-.devis__list svg { width: 1.25rem; height: 1.25rem; color: var(--camel); margin-top: .15em; }
+.devis__etapes li:last-child { border-bottom: 0; padding-bottom: 0; }
+.devis__num {
+  font-family: var(--font-mono); font-size: var(--t-xs);
+  letter-spacing: .1em; color: var(--accent);
+  padding-top: .3em;
+}
+.devis__etapes h3 {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 20, "WONK" 1;
+  font-size: var(--t-lg); line-height: 1.25;
+  margin-bottom: var(--sp-2);
+}
+.devis__etapes p { font-size: var(--t-sm); color: var(--fg-muted); max-width: 40ch; }
+
+/* Bloc de contact direct : une alternative visible au formulaire */
+.devis__contact {
+  margin-top: var(--sp-7);
+  padding: var(--sp-5);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  display: grid; gap: var(--sp-3);
+}
+.devis__contact .label { margin-bottom: var(--sp-1); }
+.devis__tel, .devis__mail {
+  display: inline-flex; align-items: center; gap: var(--sp-3);
+  width: fit-content;
+  transition: color var(--dur) var(--ease);
+}
+.devis__tel svg, .devis__mail svg { width: 1.125rem; height: 1.125rem; color: var(--camel); flex: none; }
+.devis__tel span {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 20, "WONK" 1;
+  font-size: var(--t-xl);
+}
+.devis__mail span {
+  font-size: var(--t-sm); color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+.devis__tel:hover, .devis__mail:hover { color: var(--accent); }
+.devis__tel:hover span, .devis__mail:hover span { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Le formulaire est posé sur une surface : il se détache du fond et
+   équilibre visuellement la colonne de gauche. */
+.form--carte {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+.form--carte .field__control { background: var(--bg); }
 
 .form { display: grid; gap: var(--sp-5); }
 .form__row { display: grid; gap: var(--sp-5); }
