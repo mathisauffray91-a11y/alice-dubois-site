@@ -21,46 +21,45 @@ Ces points demandent des informations que je n'avais pas. Tout le reste est prê
 
 Le site est un dossier statique : il fonctionne sur n'importe quel hébergeur, sans build.
 
+**Adresse actuelle : https://alice-dubois.pages.dev** — Cloudflare Pages, sous le compte
+Maison Bel Œuvre (`contact@maison-beloeuvre.com`), le même qui sert déjà maisonbeloeuvre.fr.
+
 **Deux réglages « démo » à retirer le jour de la vraie mise en ligne :**
 
-1. `index.html` — la balise `<meta name="robots" content="noindex, nofollow">` (ligne 9)
-2. `netlify.toml` — la ligne `X-Robots-Tag`
-3. `mentions-legales.html` — la balise `robots` peut rester en `noindex`
+1. `index.html` — la balise `<meta name="robots" content="noindex, nofollow">`
+2. `_headers` et `netlify.toml` — la ligne `X-Robots-Tag`
 
-Elles empêchent l'indexation par Google tant que les mentions légales sont incomplètes.
-
-### Option A — GitHub Pages (gratuit, sans limite)
-
-Le dépôt Git est déjà initialisé et le premier commit est fait. Il reste à créer le dépôt
-distant et à activer Pages :
+### Redéployer sur Cloudflare Pages
 
 ```bash
-cd "/Users/mathisauffray/Documents/Claude code/ebeniste-dubois" && gh repo create alice-dubois-site --public --source=. --push && gh api -X POST "repos/{owner}/alice-dubois-site/pages" -f "source[branch]=main" -f "source[path]=/"
+cd "/Users/mathisauffray/Documents/Claude code/ebeniste-dubois" && npx wrangler pages deploy . --project-name alice-dubois --branch main --commit-dirty=true
 ```
 
-L'adresse sera `https://<votre-compte>.github.io/alice-dubois-site/`, active en 1 à 2 minutes.
+Les en-têtes sont dans `_headers` (équivalent Cloudflare de `netlify.toml`).
+Cloudflare sert les pages sans l'extension `.html` : `mentions-legales.html` est redirigé
+en 308 vers `mentions-legales`, les liens internes fonctionnent sans changement.
 
-Limite : GitHub Pages ne traite pas les formulaires. La demande de devis basculera
-automatiquement sur le repli e-mail (bouton « Envoyer par e-mail », message pré-rempli).
+### Adresse définitive
 
-### Option B — Netlify (formulaire fonctionnel)
+Le domaine `alicedubois.fr` était libre à la livraison (vérifié auprès de l'AFNIC), tout
+comme `ebenisterie-dubois.fr` et `dubois-ebenisterie.fr`. C'est vers `alicedubois.fr` que
+pointent déjà la balise canonique et les données structurées.
 
-Netlify est le meilleur choix **parce que le formulaire de devis y fonctionne vraiment**.
-Attention : au moment de la livraison, le compte affichait
-`Account credit usage exceeded - new deploys are blocked until credits are added`.
-Il faut donc régler ce point sur le compte avant de pouvoir déployer.
+En attendant, un sous-domaine de l'agence est possible sans rien acheter :
+`alice-dubois.maisonbeloeuvre.fr`, à rattacher au projet Pages depuis le tableau de bord
+Cloudflare — le domaine y est déjà géré.
 
-Le site `alice-dubois` a déjà été créé et lié au dossier. Une fois les crédits rétablis :
+### Miroir GitHub Pages
 
-```bash
-cd "/Users/mathisauffray/Documents/Claude code/ebeniste-dubois" && npx netlify-cli deploy --prod --dir=.
-```
+Le dépôt `mathisauffray91-a11y/alice-dubois-site` reste publié sur
+`https://mathisauffray91-a11y.github.io/alice-dubois-site/`. Il sert de sauvegarde et
+d'historique ; l'adresse à communiquer est celle de Cloudflare.
 
-Sinon, dépôt manuel du zip sur [app.netlify.com/drop](https://app.netlify.com/drop).
+### Netlify
 
-Puis dans **Site configuration → Forms**, vérifier que le formulaire `devis` est détecté et
-ajouter une notification par e-mail. Le formulaire utilise Netlify Forms
-(`data-netlify="true"`) avec un piège anti-spam (`netlify-honeypot="societe"`).
+Le projet `alice-dubois` y est créé mais **les déploiements sont bloqués** :
+`Account credit usage exceeded`. Netlify reste le seul des trois à traiter le formulaire
+de devis automatiquement ; sur Cloudflare et GitHub, le repli par e-mail prend le relais.
 
 ## Structure
 
