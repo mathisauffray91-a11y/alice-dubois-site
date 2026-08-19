@@ -430,7 +430,28 @@ body::after {
 .nav__link[aria-current="true"]::after { transform: scaleX(1); }
 .nav__link[aria-current="true"] { font-weight: 600; }
 
-.header__actions { display: flex; align-items: center; gap: var(--sp-3); }
+.header__actions { display: flex; align-items: center; gap: var(--sp-2); }
+
+/* Numéro d'appel toujours accessible, quel que soit l'endroit de la page.
+   Pastille seule sur petit écran, numéro complet à partir de 62rem. */
+.header__tel {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--sp-3);
+  min-width: 44px; min-height: 44px;
+  padding: 0 .625rem;
+  border-radius: 999px;
+  font-size: var(--t-sm); font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.header__tel svg { width: 1.125rem; height: 1.125rem; flex: none; }
+.header__tel-num { display: none; }
+@media (min-width: 62rem) {
+  .header__tel { padding-inline: .875rem; }
+  .header__tel-num { display: inline; }
+}
+.header__tel:hover { background: color-mix(in srgb, currentColor 14%, transparent); }
+.header.is-stuck .header__tel:hover { color: var(--accent); }
 .header__cta { display: none; }
 @media (min-width: 48rem) { .header__cta { display: inline-flex; } }
 .header .btn--ghost { --btn-bd: currentColor; }
