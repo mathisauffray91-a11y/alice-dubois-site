@@ -181,6 +181,19 @@ Si Alice fournit ses originaux de pellicule (probablement 12 Mpx), on obtient du
 **réel** plutôt que recomposé — et le doute sur la fidélité disparaît. Les fichiers doivent
 être transmis par AirDrop ou en « taille réelle », jamais par messagerie ni capture d'écran.
 
+## Implantation
+
+Atelier à **Pantin (93500)**, Seine-Saint-Denis, aux portes de Paris.
+**Déplacements dans toute la France**, pour le relevé comme pour la pose.
+
+L'information apparaît dès le premier écran (bandeau du hero), dans la section
+« L'atelier », dans le bloc de contact, dans le pied de page, dans une question dédiée
+de la FAQ, dans la description pour les moteurs de recherche et dans les données
+structurées `LocalBusiness` (`address` + `areaServed`), ce qui compte pour le
+référencement local.
+
+L'adresse précise — numéro et rue — reste à fournir dans les mentions légales.
+
 ## Ce qui a été vérifié
 
 - **Rendu** : 375×667, 390×844, 768×1024, 1280×800, 1440×700, 1440×900. Aucun débordement horizontal.

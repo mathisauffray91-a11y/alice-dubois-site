@@ -1096,6 +1096,13 @@ body.is-locked { overflow: hidden; }
   display: grid; gap: var(--sp-3);
 }
 .devis__contact .label { margin-bottom: var(--sp-1); }
+.devis__zone {
+  font-size: var(--t-sm); color: var(--fg-muted);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--sp-1);
+}
+.devis__zone strong { color: var(--fg); font-weight: 600; }
 .devis__tel, .devis__mail {
   display: inline-flex; align-items: center; gap: var(--sp-3);
   width: fit-content;
